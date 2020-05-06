@@ -29,7 +29,7 @@ void write(MDB_txn* txn, MDB_dbi dbi, int key, char* value, int value_size){
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 4) {// ?
+    if (argc != 5) {// ?
         printf("Only two input arguments. The path to set up the database, the number of writes in the loop, and then the number of bytes to write each iteration.");
         return 1;
     }
@@ -37,6 +37,16 @@ int main(int argc, char* argv[]) {
     const char* dbpath = argv[1];
     const int num_loops = atoi(argv[2]);
     const int numb_bytes_to_write = atoi(argv[3]);
+
+    bool remove_db_after;
+    if (strncasecmp(argv[4], "yes", 4) == 0 || strncasecmp(argv[4], "y", 2) == 0) {
+        remove_db_after = true;
+    } else if (strncasecmp(argv[4], "no", 4) == 0 || strncasecmp(argv[4], "n", 2) == 0) {
+        remove_db_after = false;
+    } else {
+        printf("Last argument must be a yes or no to deleting the database files afterwards");
+        return 1;
+    }
 
 
     struct stat st;
@@ -131,6 +141,11 @@ int main(int argc, char* argv[]) {
     printf("Throughput: %f writes/second\n", (num_loops / resulting_ns) * 1000000000);
 
 
+    if (remove_db_after) {
+            char rm_command[8 + (sizeof(char) * strlen(dbpath))];
+            sprintf(rm_command, "rm -r %s", dbpath);
+            system(rm_command);
+    }
 
 
     return 0;
