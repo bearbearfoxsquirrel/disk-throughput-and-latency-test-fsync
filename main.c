@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "stdlib.h"
+#include <time.h>
 #include <sys/stat.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -30,7 +31,7 @@ void write(MDB_txn* txn, MDB_dbi dbi, int key, char* value, int value_size){
 
 int main(int argc, char* argv[]) {
     if (argc != 5) {// ?
-        printf("Only two input arguments. The path to set up the database, the number of writes in the loop, and then the number of bytes to write each iteration.");
+        printf("Input arguments are as follows: the path to set up the database, the number of writes in the loop, the number of bytes to write each iteration, and whether or not to delete the database afterwards.");
         return 1;
     }
 
@@ -98,6 +99,7 @@ int main(int argc, char* argv[]) {
                         dbpath, mdb_strerror(result));
         return 1;
     }
+
 
 
     char* dummy_value = malloc(sizeof(char) * numb_bytes_to_write);
