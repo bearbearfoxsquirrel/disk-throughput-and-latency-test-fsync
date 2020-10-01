@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
     }
     if ((result = mdb_env_open(env, dbpath,
                                0,
-                               S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH)) != 0) {
+                               MDB_WRITEMAP | MDB_NORDAHEAD | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH)) != 0) {
         printf("Could not open lmdb environment at %s. %s",
                         dbpath, mdb_strerror(result));
         return 1;
